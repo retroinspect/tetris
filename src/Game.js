@@ -1,0 +1,1 @@
+// TODO: BlockManager의 결과에 따라 state 변화
