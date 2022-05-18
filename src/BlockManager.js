@@ -12,10 +12,30 @@ export class BlockManager {
     return new randomBlockClass();
   }
 
-  // 테이블을 벗어난 블록이 있거나, 블록이 겹치면 true
-  static hasIntersected(blocks, row, col) {
-    return false;
+  // TODO: 아래 함수들 모두 Data로 옮기기
+  // blocks만 업데이트하고 updateTable 호출해서 테이블에 반영
+  // blocks에서 block은 절대 사라지지 않음 (혹은 테이블에서 완전히 보이지 않게 되면 사라지도록 처리)
+  // 마지막 라인 다 찼을 때 지우는 것 고려 -> block이 테이블을 뚫고 움직일 수 있어야함
+
+  static addBlock(table, blocks, block) {
+    for (let x = 0; x < table[0].length; x++) {
+      block.x = x
+      if (!this.hasIntersected(block, table)) {
+        for (let i = block.top; i < form.length; i++) {
+          for (let j = block.leftMost; j < form[0].length; j++) {
+            if (form[i][j]) {
+              table[i][j + x] = block.color;
+            }
+          }
+        }
+
+        return { table, blocks: [...blocks, block] };
+      }
+    }
+
+    throw "cannot add block";
   }
+
 
   static toTable(blocks, row, col) {
     const table = Array(row)
@@ -26,6 +46,9 @@ export class BlockManager {
       for (let i = 0; i < form.length; i++) {
         for (let j = 0; j < form[0].length; j++) {
           if (form[i][j]) {
+            if (y + i >= row || x + j >= col) {
+              throw 'invalid location'
+            }
             table[y + i][x + j] = color;
           }
         }
@@ -35,11 +58,34 @@ export class BlockManager {
     return table
   }
 
-  // TODO:
+  static hasIntersected(block, table) {
+    const row = table.length
+    const col = table[0].length
+
+    const { form, y, x } = block
+    for (let i = 0; i < form.length; i++) {
+      for (let j = 0; j < form[0].length; j++) {
+        if (form[i][j] == 1) {
+          if (y + i >= row || x + j >= col) return true;
+          if (table[i][j + col] !== "#bbb") {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
   static fall(blocks) {
     // 1 timestamp 지났을 때 테이블의 블록들 떨어뜨리기
-    blocks.forEach(blocks.y);
 
+    blocks.sort(block => block.bottom)
+
+    blocks.forEach(block => {
+      if (this.hasIntersected(block, table)) {
+        block.move(1, 0)
+      }
+    });
     return blocks;
   }
 

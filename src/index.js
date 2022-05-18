@@ -10,15 +10,13 @@ const base = document.getElementById("game");
 
 const renderer = new Renderer(base);
 
-const colors = blocks.map((b) => b.color);
-const getColor = () => randomElement(["#bbb"]);
-
 const cells = Array(20)
   .fill(Array(20).fill())
-  .map((row) => Array.from(row.map((cell) => getColor())));
+  .map((row) => Array.from(row.map((cell) => '#bbb')));
 
 let data = new Data({
   table: cells,
+  blocks: [],
   nextBlock: BlockManager.getRandomBlock().block,
 });
 
@@ -27,7 +25,7 @@ renderer.render(data);
 document.getElementById("next").onclick = () => {
   renderer.clear();
   data.table = BlockManager.addBlock(data.nextBlock, data.table);
-  data.nextBlock = BlockManager.getRandomBlock().block;
+  data.nextBlock = BlockManager.getRandomBlock();
   renderer.render(data);
 };
 
