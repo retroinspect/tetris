@@ -34,9 +34,11 @@ export const Block = ({ color, forms, origins }) =>
     //   }
     // }
 
-    move(y, x) {
-      this.y = y;
-      this.x = x;
+    move(dy, dx) {
+      this.y += dy;
+      this.x += dx;
+
+      return this
     }
 
     get bottom() {

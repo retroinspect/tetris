@@ -1,59 +1,41 @@
 import { Block } from "./Block.js";
 import { BlockManager } from "./BlockManager.js";
+import { blockClasses } from "./TestUtils.js";
 
 console.log("BlockManager.spec.ts");
 
 const test1 = () => {
-  const actual = BlockManager.toTable([
-    {
-      color: "red",
-      form: [
-        [1, 1],
-        [1, 1],
-      ],
-      y: 0,
-      x: 0
-    }], 3, 3)
+  const block = new blockClasses[0]();
+
+  const actual = BlockManager.toTable([block], 3, 3);
 
   const expected = [
     ["red", "red", "#bbb"],
     ["red", "red", "#bbb"],
     ["#bbb", "#bbb", "#bbb"],
-  ]
+  ];
 
-  console.log(
-    actual.join("") ===
-    expected.join("")
-  );
+  console.log(actual.join("") === expected.join(""));
 };
 
 const test2 = () => {
-  const actual = BlockManager.toTable([
-    {
-      color: "red",
-      form: [
-        [1, 1],
-        [1, 1],
-      ],
-      y: 1,
-      x: 1
-    }], 3, 3)
+  const block = new blockClasses[0]();
+  block.move(1, 1);
+
+  const actual = BlockManager.toTable([block], 3, 3);
 
   const expected = [
     ["#bbb", "#bbb", "#bbb"],
     ["#bbb", "red", "red"],
     ["#bbb", "red", "red"],
-  ]
+  ];
 
-  console.log(
-    actual.join("") ===
-    expected.join("")
-  );
+  console.log(actual.join("") === expected.join(""));
 };
 
-
 const test3 = () => {
-  console.log("test3");
+  const block = new blockClasses[2]();
+
   const actual = BlockManager.addBlock(
     [
       ["#bbb", "#bbb", "#bbb"],
@@ -61,15 +43,7 @@ const test3 = () => {
       ["#bbb", "#bbb", "#bbb"],
     ],
     [],
-    new Block({
-      color: "red",
-      forms: [[
-        [1, 1, 0],
-        [0, 1, 1],
-        [0, 0, 0],
-      ]],
-      origins: [{ y: 0, x: 0 }]
-    }),
+    block
   ).table;
 
   console.log(actual);
@@ -89,19 +63,9 @@ const test4 = () => {
       ["#bbb", "#bbb", "#bbb"],
       ["#bbb", "#bbb", "#bbb"],
       ["green", "#bbb", "#bbb"],
-    ], [],
-
-    new Block({
-      color: "red",
-      forms: [[
-        [0, 1, 0],
-        [0, 1, 1],
-        [0, 1, 0],
-
-      ]],
-      origins: [{ y: 0, x: 0 }]
-    }),
-
+    ],
+    [],
+    new blockClasses[3]()
   ).table.join("");
 
   const expected = [
@@ -115,21 +79,13 @@ const test4 = () => {
 
 export const test5 = () => {
   const actual = BlockManager.addBlock(
-
     [
       ["#bbb", "#bbb", "#bbb"],
       ["#bbb", "#bbb", "#bbb"],
       ["#bbb", "#bbb", "#bbb"],
-    ], [],
-    new Block({
-      color: "red",
-      forms: [[
-        [0, 0, 0],
-        [0, 1, 1],
-        [1, 1, 0],
-      ]],
-      origins: [{ y: 0, x: 0 }]
-    }),
+    ],
+    [],
+    new blockClasses[4]()
   ).table;
 
   console.log(actual);
@@ -153,18 +109,11 @@ export const test6 = () => {
         ["#bbb", "#bbb", "#bbb"],
       ],
       [],
-      new Block({
-        color: "red",
-        forms: [[
-          [1, 1],
-          [1, 1],
-        ]],
-        origins: [{ y: 0, x: 0 }]
-      }),
+      new blockClasses[0]()
     );
   } catch (error) {
     console.log(true);
-    return
+    return;
   }
 
   console.log(false);
